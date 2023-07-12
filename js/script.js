@@ -5,6 +5,8 @@ const containerSquare = document.querySelector(".container");
 const inputEl = document.querySelector(".input-select");
 const playBtn = document.querySelector(".btn-play");
 
+const messageEl = document.querySelector(".game-message");
+
 
 playBtn.addEventListener("click", function () {
     //numero delle celle che compongono la griglia (input select)
@@ -20,6 +22,48 @@ playBtn.addEventListener("click", function () {
     //array contenente la posizione delle bombe nella griglia
     let listBomb = generateBombs(inputNum);
     console.log(listBomb);
+
+    //recupero tutte le celle dal dom aggiornate alle ultime op effettuate
+    let nodeCellList = document.querySelectorAll(".square");
+
+    //setto la posizione delle bombe nella griglia 
+    bombPosition(listBomb, nodeCellList);
+
+    //variabile che conterrà un array con il numero della cella
+    //ogni volta cliccata dall'utente
+    let score = [];
+
+    let win = inputNum - listBomb.length; //punteggio per vincere
+
+    //sull'array di nodi ad ogni cella della griglia per ogni giro del ciclo
+    //applico un ascoltatore con una funzione anonima che si attiva solo al click
+    //sull'elemento stesso
+    for (let j = 0; j < nodeCellList.length; j++) {
+        let nodeSquare = nodeCellList[j];
+        nodeSquare.addEventListener("click", function () {
+            //l'utente ha perso
+            if (this.dataset.position === "bomb") {
+                this.classList.add("failed");
+                this.innerHTML = "bomba";
+                messageEl.innerHTML = `Mi dispiace, hai perso, il tuo punteggio 
+                è ${score.length}`;
+                return;
+            } else if (this.dataset.position === undefined) {
+                this.classList.add("success");
+                console.log(`Hai cliccato la cella ${this.innerHTML}`);
+                //ogni volta che clicca su una cella pusho il numero
+                //della cella nell'array del punteggio
+                score.push(this.innerHTML);
+
+                //l'utente ha vinto
+                if (score.length === win) {
+                    messageEl.innerHTML = `Congratulazioni, hai vinto! Il tuo 
+                    punteggio è ${score.length}`;
+                    return;
+                }
+            }
+        });
+    }
 })
 
 
@@ -36,7 +80,7 @@ function createGrid(numberCells) {
     for (let i = 1; i <= numberCells; i++) {
         //creo cella
         let cell = document.createElement("div");
-        cell.innerHTML = `<span class="number">${i}</span>`
+        cell.innerHTML = `${i}`;
         cell.classList.add("square"); //aggiungo classe per visualizzazione
         //calcolo dinamicamente la larghezza di ogni cella a partire dal numero per riga
         cell.style.flexBasis = `calc(100% / ${cellsPerRow})`;
@@ -47,22 +91,13 @@ function createGrid(numberCells) {
 }
 
 
-//funzione che stamperà la griglia nel Dom e che crea per ogni cella
-//l'ascoltatore di evento
+//funzione che stamperà la griglia nel Dom
 function printing(container, list) {
     //svuoto il container per evitare celle in eccesso
     container.innerHTML = "";
 
     for (let i = 0; i < list.length; i++) {
         container.append(list[i]);
-
-        //dopo aver appeso il div applico un ascoltatore per ogni 
-        //elemento per ogni giro del ciclo --> ogni el avrà la sua
-        //funzione anonima che viene eseguita solo al click sull'elemento stesso
-        list[i].addEventListener("click", function () {
-            list[i].classList.toggle("success");
-            console.log(`Hai cliccato la cella ${i + 1}`);
-        })
     }
 }
 
@@ -82,4 +117,18 @@ function generateBombs(number) {
         }
     }
     return bombArr;
+}
+
+//funzione che tiene traccia della posizione delle bombe nella griglia
+//argomento 1: la lista delle bombe
+//argomento 2: la lista delle celle della griglia
+function bombPosition(bombList, nodeList) {
+    //ciclo l'array contenente le posizioni delle bombe
+    for (let i = 0; i < bombList.length; i++) {
+        let posizione = bombList[i] - 1; //sottraggo 1 perchè la pozione nell'array nodeList dell'elemento va a partire da 0
+
+        //setto la posizione della bomba nella griglia
+        nodeList[posizione].dataset.position = "bomb";
+    }
+
 }
