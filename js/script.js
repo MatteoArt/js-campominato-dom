@@ -27,7 +27,7 @@ playBtn.addEventListener("click", function () {
 
     //recupero tutte le celle dal dom aggiornate alle ultime op effettuate
     let nodeCellList = document.querySelectorAll(".square");
-3
+    
     //setto la posizione delle bombe nella griglia 
     bombPosition(listBomb, nodeCellList);
 
