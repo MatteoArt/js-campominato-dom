@@ -41,13 +41,14 @@ main {
     font-size: 13px;
     font-weight: 600;
     display: inline-block;
-    padding: 8px;
+    padding: 8px 12px;
     background-color: rgb(95, 177, 95);
     border: 1px solid rgb(44, 142, 44);
-    border-radius: 8px;
+    border-radius: 5px;
     color: white;
     cursor: pointer;
     margin-left: 10px;
+    margin-right: 20px;
 }
 .square {
     aspect-ratio: 1 / 1;
@@ -57,6 +58,7 @@ main {
     align-items: center;
     font-size: large;
     font-weight: 600;
+    color: #2F5EA4;
 }
 label {
     font-weight: 600;
@@ -78,14 +80,31 @@ footer {
     font-weight: 500;
 }
 .failed {
+    color: white;
     background-color: red;
     border-color: rgb(189, 15, 15);
 }
 .success {
+    color: white;
     background-color: #00A3E8;
     border-color: #007db2;
 }
 .game-message {
-    margin: 40px auto 0;
+    margin: 40px auto 15px;
     max-width: 800px;
+    text-align: center;
+    font-size: x-large;
+}
+.lose {
+    color: #840606;
+}
+.win {
+    color: rgb(24, 141, 24);
+}
+.game-info {
+    margin: 0 auto;
+    max-width: 800px;
+    text-align: center;
+    font-weight: 600;
+    font-size: small;
 }

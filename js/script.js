@@ -7,6 +7,8 @@ const playBtn = document.querySelector(".btn-play");
 
 const messageEl = document.querySelector(".game-message");
 
+const infoEl = document.querySelector(".game-info");
+
 
 playBtn.addEventListener("click", function () {
     //numero delle celle che compongono la griglia (input select)
@@ -25,7 +27,7 @@ playBtn.addEventListener("click", function () {
 
     //recupero tutte le celle dal dom aggiornate alle ultime op effettuate
     let nodeCellList = document.querySelectorAll(".square");
-
+3
     //setto la posizione delle bombe nella griglia 
     bombPosition(listBomb, nodeCellList);
 
@@ -35,18 +37,29 @@ playBtn.addEventListener("click", function () {
 
     let win = inputNum - listBomb.length; //punteggio per vincere
 
+    //variabile globale che indica se è finita o meno la partita
+    let finito = false;
+
+    messageEl.innerHTML = "";
+    infoEl.innerHTML = "";
+
     //sull'array di nodi ad ogni cella della griglia per ogni giro del ciclo
     //applico un ascoltatore con una funzione anonima che si attiva solo al click
     //sull'elemento stesso
     for (let j = 0; j < nodeCellList.length; j++) {
         let nodeSquare = nodeCellList[j];
         nodeSquare.addEventListener("click", function () {
+            if (finito === true) {
+                return;
+            }
             //l'utente ha perso
             if (this.dataset.position === "bomb") {
                 this.classList.add("failed");
-                this.innerHTML = "bomba";
-                messageEl.innerHTML = `Mi dispiace, hai perso, il tuo punteggio 
-                è ${score.length}`;
+                this.innerHTML = `<i class="fa-solid fa-bomb fa-2xl"></i>`;
+                messageEl.innerHTML = `<span class="lose">Mi dispiace, hai perso, il tuo punteggio 
+                è: ${score.length}</span>`;
+                infoEl.innerHTML = "Clicca nuovamente Play! o ricarica la pagina per giocare una nuova partita";
+                finito = true;
                 return;
             } else if (this.dataset.position === undefined) {
                 this.classList.add("success");
@@ -57,14 +70,16 @@ playBtn.addEventListener("click", function () {
 
                 //l'utente ha vinto
                 if (score.length === win) {
-                    messageEl.innerHTML = `Congratulazioni, hai vinto! Il tuo 
-                    punteggio è ${score.length}`;
+                    messageEl.innerHTML = `<span class="win">Congratulazioni, hai vinto! Il tuo 
+                    punteggio è: ${score.length}</span>`;
+                    infoEl.innerHTML = "Clicca nuovamente Play! o ricarica la pagina per giocare una nuova partita";
+                    finito = true;
                     return;
                 }
             }
         });
     }
-})
+});
 
 
 //funzione che crea la griglia di gioco a partire dalle singole celle
@@ -125,7 +140,7 @@ function generateBombs(number) {
 function bombPosition(bombList, nodeList) {
     //ciclo l'array contenente le posizioni delle bombe
     for (let i = 0; i < bombList.length; i++) {
-        let posizione = bombList[i] - 1; //sottraggo 1 perchè la pozione nell'array nodeList dell'elemento va a partire da 0
+        let posizione = bombList[i] - 1; //sottraggo 1 perchè la posizione nell'array nodeList dell'elemento va a partire da 0
 
         //setto la posizione della bomba nella griglia
         nodeList[posizione].dataset.position = "bomb";
