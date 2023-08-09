@@ -56,6 +56,16 @@ playBtn.addEventListener("click", function () {
             if (this.dataset.position === "bomb") {
                 this.classList.add("failed");
                 this.innerHTML = `<i class="fa-solid fa-bomb fa-2xl"></i>`;
+                this.dataset.current = "cliccato";
+                //se viene presa una bomba scopro tutte le celle contenenti le bombe nascoste
+                for (let k = 0; k < nodeCellList.length; k++) {
+                    let cella = nodeCellList[k];
+                    if (cella.dataset.position === "bomb" && cella.dataset.current === undefined) {
+                        cella.classList.add("failed");
+                        cella.innerHTML = `<i class="fa-solid fa-bomb fa-2xl"></i>`;
+                    }
+                }
+
                 messageEl.innerHTML = `<span class="lose">Mi dispiace, hai perso, il tuo punteggio 
                 è: ${score.length}</span>`;
                 infoEl.innerHTML = "Clicca nuovamente Play! o ricarica la pagina per giocare una nuova partita";
@@ -70,6 +80,13 @@ playBtn.addEventListener("click", function () {
 
                 //l'utente ha vinto
                 if (score.length === win) {
+                    for (let k = 0; k < nodeCellList.length; k++) {
+                        let cella = nodeCellList[k];
+                        if (cella.dataset.position === "bomb" && cella.dataset.current === undefined) {
+                            cella.classList.add("failed");
+                            cella.innerHTML = `<i class="fa-solid fa-bomb fa-2xl"></i>`;
+                        }
+                    }
                     messageEl.innerHTML = `<span class="win">Congratulazioni, hai vinto! Il tuo 
                     punteggio è: ${score.length}</span>`;
                     infoEl.innerHTML = "Clicca nuovamente Play! o ricarica la pagina per giocare una nuova partita";
