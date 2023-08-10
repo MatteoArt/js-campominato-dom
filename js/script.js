@@ -49,6 +49,9 @@ playBtn.addEventListener("click", function () {
     for (let j = 0; j < nodeCellList.length; j++) {
         let nodeSquare = nodeCellList[j];
         nodeSquare.addEventListener("click", function () {
+            if (this.dataset.giaCliccato === "si") {
+                return;
+            }
             if (finito === true) {
                 return;
             }
@@ -72,6 +75,7 @@ playBtn.addEventListener("click", function () {
                 finito = true;
                 return;
             } else if (this.dataset.position === undefined) {
+                this.dataset.giaCliccato = "si";
                 this.classList.add("success");
                 console.log(`Hai cliccato la cella ${this.innerHTML}`);
                 //ogni volta che clicca su una cella pusho il numero
